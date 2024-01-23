@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_boot_challenge/day_1/day_1_advanced_app.dart';
+import 'package:flutter_boot_challenge/day_2/day_2_basic_app.dart';
 
 void main() {
   runApp(const MyApp());
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       debugShowCheckedModeBanner: false,
-      home: const Day1AdvancedApp(),
+      home: const Day2BasicApp(),
     );
   }
 }
