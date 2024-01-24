@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class Day3BasicApp extends StatefulWidget {
@@ -19,24 +21,29 @@ class _Day3BasicAppState extends State<Day3BasicApp> {
         builder: (BuildContext context, BoxConstraints constraints) {
           double bodyWidth = constraints.maxWidth;
           double bodyHeight = constraints.maxHeight;
-          if (bodyWidth > bodyHeight) {
-            // return SingleChildScrollView(
-            //   physics: const NeverScrollableScrollPhysics(),
-            //   child: BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
-            // );
-            return OverflowBox(
-              maxHeight: double.infinity,
+          return OverflowBox(
+              maxHeight: max(bodyWidth, bodyHeight),
               alignment: Alignment.topCenter,
-              child: BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
-            );
-          } else {
-            return Column(
-              children: [
-                BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
-                const Expanded(child: BoxB()),
-              ],
-            );
-          }
+              child: Column(
+                children: [
+                  BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
+                  const Expanded(child: BoxB()),
+                ],
+              ));
+          // if (bodyWidth > bodyHeight) {
+          //   return OverflowBox(
+          //     maxHeight: double.infinity,
+          //     alignment: Alignment.topCenter,
+          //     child: BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
+          //   );
+          // } else {
+          //   return Column(
+          //     children: [
+          //       BoxA(boxWidth: bodyWidth, boxHeight: bodyWidth),
+          //       const Expanded(child: BoxB()),
+          //     ],
+          //   );
+          // }
         },
       ),
     );
