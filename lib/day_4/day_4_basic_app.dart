@@ -14,10 +14,36 @@ class _Day4BasicAppState extends State<Day4BasicApp> {
 
   @override
   void initState() {
-    focusNode1 = FocusNode();
-    focusNode2 = FocusNode();
+    focusNode1 = FocusNode(
+      onKey: (node, event) {
+        if (event is RawKeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.backspace) {
+            if (controller1.text.isEmpty) {
+              FocusScope.of(context).requestFocus(focusNode2);
+              return KeyEventResult.handled;
+            }
+          }
+        }
+        return KeyEventResult.skipRemainingHandlers;
+      },
+    );
+    focusNode2 = FocusNode(
+      onKey: (node, event) {
+        if (event is RawKeyDownEvent) {
+          if (event.logicalKey == LogicalKeyboardKey.backspace) {
+            if (controller2.text.isEmpty) {
+              FocusScope.of(context).requestFocus(focusNode1);
+              return KeyEventResult.handled;
+            }
+          }
+        }
+        return KeyEventResult.skipRemainingHandlers;
+      },
+    );
+
     controller1 = TextEditingController()..text = 'Hello';
     controller2 = TextEditingController()..text = 'FlutterBoot!';
+
     super.initState();
   }
 
@@ -40,53 +66,28 @@ class _Day4BasicAppState extends State<Day4BasicApp> {
           child: Row(
             children: [
               Flexible(
-                  child: CustomTextField(
-                selfFocusNode: focusNode1,
-                beforeFocusNode: focusNode2,
-                nextFocusNode: focusNode2,
-                controller: controller1,
-              )),
+                child: TextField(
+                  focusNode: focusNode1,
+                  controller: controller1,
+                  onSubmitted: (value) {
+                    FocusScope.of(context).requestFocus(focusNode2);
+                  },
+                ),
+              ),
               const SizedBox(width: 16.0),
               Flexible(
-                  child: CustomTextField(
-                selfFocusNode: focusNode2,
-                beforeFocusNode: focusNode1,
-                nextFocusNode: focusNode1,
-                controller: controller2,
-              )),
+                child: TextField(
+                  focusNode: focusNode2,
+                  controller: controller2,
+                  onSubmitted: (value) {
+                    FocusScope.of(context).requestFocus(focusNode1);
+                  },
+                ),
+              ),
             ],
           ),
         ),
       ),
-    );
-  }
-}
-
-class CustomTextField extends StatelessWidget {
-  const CustomTextField({super.key, required this.selfFocusNode, required this.beforeFocusNode, required this.nextFocusNode, required this.controller});
-  final FocusNode selfFocusNode;
-  final FocusNode beforeFocusNode;
-  final FocusNode nextFocusNode;
-  final TextEditingController controller;
-
-  @override
-  Widget build(BuildContext context) {
-    return RawKeyboardListener(
-      focusNode: FocusNode(),
-      child: TextField(
-        focusNode: selfFocusNode,
-        controller: controller,
-        onSubmitted: (value) {
-          FocusScope.of(context).requestFocus(nextFocusNode);
-        },
-      ),
-      onKey: (keyEvent) {
-        if (keyEvent is RawKeyDownEvent) {
-          if (keyEvent.logicalKey == LogicalKeyboardKey.backspace && controller.text.isEmpty) {
-            FocusScope.of(context).requestFocus(beforeFocusNode);
-          }
-        }
-      },
     );
   }
 }
